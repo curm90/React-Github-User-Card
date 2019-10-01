@@ -1,29 +1,35 @@
 import React, { Component } from 'react';
 import './App.css';
 import Axios from 'axios';
-import GithubCard from './components/GithubCard';
+import GithubUserCard from './components/GithubUserCard';
+import GithubFollowersCard from './components/GithubFollowersCard';
 
 class App extends Component {
   constructor() {
     super();
 
     this.state = {
+      username: 'curm90',
       user: {},
-      followers: []
+      followers: [],
+      searchTerm: ''
     };
   }
 
   componentDidMount() {
-    Axios.get('https://api.github.com/users/curm90')
-      .then(res => {
-        this.setState({ user: res.data });
-      })
-      .catch(err => {
-        console.log(err);
-      });
-    Axios.get('https://api.github.com/users/curm90/followers')
-      .then(res => {
-        this.setState({ followers: res.data });
+    const userPromise = Axios.get(
+      `https://api.github.com/users/${this.state.username}`
+    );
+    const followersPromise = Axios.get(
+      `https://api.github.com/users/${this.state.username}/followers`
+    );
+
+    Promise.all([userPromise, followersPromise])
+      .then(([userPromise, followersPromise]) => {
+        this.setState({
+          user: userPromise.data,
+          followers: followersPromise.data
+        });
       })
       .catch(err => {
         console.log(err);
@@ -32,9 +38,9 @@ class App extends Component {
 
   render() {
     return (
-      <div>
-        <h1>Hello World!</h1>
-        <GithubCard user={this.state.user} followers={this.state.followers} />
+      <div className='app'>
+        <GithubUserCard user={this.state.user} />
+        <GithubFollowersCard followers={this.state.followers} />
       </div>
     );
   }
