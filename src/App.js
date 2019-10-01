@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Axios from 'axios';
+import GithubData from './components/GithubData';
 
 class App extends Component {
   constructor(props) {
@@ -25,7 +26,7 @@ class App extends Component {
     return (
       <div>
         <h1>Hello World!</h1>
-        <p>App Component</p>
+        <GithubData userData={this.state.user} />
       </div>
     );
   }
