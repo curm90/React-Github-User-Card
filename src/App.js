@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
 import Axios from 'axios';
-import GithubData from './components/GithubData';
+import GithubCard from './components/GithubCard';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.state = {
-      user: []
+      user: {},
+      followers: []
     };
   }
 
@@ -20,13 +21,20 @@ class App extends Component {
       .catch(err => {
         console.log(err);
       });
+    Axios.get('https://api.github.com/users/curm90/followers')
+      .then(res => {
+        this.setState({ followers: res.data });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   render() {
     return (
       <div>
         <h1>Hello World!</h1>
-        <GithubData userData={this.state.user} />
+        <GithubCard user={this.state.user} followers={this.state.followers} />
       </div>
     );
   }
